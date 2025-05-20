@@ -1,0 +1,37 @@
+services:
+  mariadb:
+    image: bitnami/mariadb:latest
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=rootpass
+      - MARIADB_USER=wp_user
+      - MARIADB_PASSWORD=wp_pass
+      - MARIADB_DATABASE=wp_db
+    volumes:
+      - db_data:/bitnami/mariadb
+
+  wordpress:
+    image: bilg07/wordpress-auto
+    restart: always
+    ports:
+      - "8000:8080"
+    environment:
+      - WORDPRESS_USERNAME=admin
+      - WORDPRESS_PASSWORD=admin123
+      - WORDPRESS_EMAIL=admin@example.com
+      - WORDPRESS_FIRST_NAME=Admin
+      - WORDPRESS_LAST_NAME=User
+      - WORDPRESS_BLOG_NAME=MyDockerWP
+      - WORDPRESS_DATABASE_USER=wp_user
+      - WORDPRESS_DATABASE_PASSWORD=wp_pass
+      - WORDPRESS_DATABASE_NAME=wp_db
+      - WORDPRESS_DATABASE_HOST=mariadb
+    depends_on:
+      - mariadb
+    volumes:
+      - wp_data:/bitnami/wordpress
+
+volumes:
+  db_data:
+  wp_data:
+
